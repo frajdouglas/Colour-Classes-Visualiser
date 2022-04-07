@@ -3,6 +3,7 @@ import { useState, useEffect, useRef } from "react";
 import { lads } from "../Local_Authority_Districts";
 import mapboxgl from "mapbox-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
+import '../../App.css'
 
 mapboxgl.accessToken = 'pk.eyJ1IjoiZnJham9uZG91Z2xhczk5IiwiYSI6ImNraTBoY2QxOTAwbmQydHFxaWJyNmJkazQifQ.axKM3VC_rhQviOkkND8v1Q'
 
@@ -69,18 +70,10 @@ console.log(jenksClasses)
     };
   }, []);
   return (
-    <div>
-      <div>
-        {jenksClasses.map((item) => {
-          return <div>{item}</div>;
-        })}
-      </div>
       <div
         ref={mapContainer}
-        className="MapContainer"
-        style={{ width: "50vw", height: "75vh", margin: "15px" }}
+        style={{ width: "45vw", height: "75vh", margin: "15px" }}
       />
-    </div>
   );
 };
 

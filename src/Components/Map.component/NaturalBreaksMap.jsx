@@ -3,21 +3,15 @@ import { useState, useEffect, useRef } from "react";
 import { lads } from "../Local_Authority_Districts";
 import mapboxgl from "mapbox-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
-import '../../App.css'
+import "../../App.css";
 
-mapboxgl.accessToken = 'pk.eyJ1IjoiZnJham9uZG91Z2xhczk5IiwiYSI6ImNraTBoY2QxOTAwbmQydHFxaWJyNmJkazQifQ.axKM3VC_rhQviOkkND8v1Q'
+mapboxgl.accessToken =
+  "pk.eyJ1IjoiZnJham9uZG91Z2xhczk5IiwiYSI6ImNraTBoY2QxOTAwbmQydHFxaWJyNmJkazQifQ.axKM3VC_rhQviOkkND8v1Q";
 
-const Map = ({jenksClasses, uploadData}) => {
+const NaturalBreaksMap = ({ classes, uploadData }) => {
   const mapContainer = useRef();
   const [mapState, setMap] = useState(null);
-console.log(jenksClasses)
-  // const [uploadData, setUploadData] = useState([1]);
-  // // let data = [1, 2, 5, 15, 45, 89.3, 112, 31, 120, 0.5];
-  // let n_classes = 5;
-
-  // useEffect(() => {
-  //   setUploadData(new Jenks(data, n_classes).naturalBreak());
-  // }, []);
+  console.log(classes);
 
   useEffect(() => {
     const map = new mapboxgl.Map({
@@ -41,16 +35,16 @@ console.log(jenksClasses)
             "interpolate",
             ["linear"],
             ["get", "SHAPE_Area"],
-            Number(jenksClasses[0]),
+            Number(classes[0]),
             "#f1eef6",
-            Number(jenksClasses[1]),
+            Number(classes[1]),
             "#d7b5d8",
-            Number(jenksClasses[2]),
+            Number(classes[2]),
             "#df65b0",
-            Number(jenksClasses[3]),
+            Number(classes[3]),
             "#dd1c77",
-            Number(jenksClasses[4]),
-            "#980043"
+            Number(classes[4]),
+            "#980043",
           ],
         },
       });
@@ -68,13 +62,23 @@ console.log(jenksClasses)
     return () => {
       map.remove();
     };
-  }, []);
+  }, [classes]);
   return (
+    <div>
+      {classes.map((item) => {
+        return (
+          <ul key={item}>
+            <li>{item}</li>
+          </ul>
+        );
+      })}
+
       <div
         ref={mapContainer}
         style={{ width: "45vw", height: "75vh", margin: "15px" }}
       />
+    </div>
   );
 };
 
-export default Map;
+export default NaturalBreaksMap;

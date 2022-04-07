@@ -1,31 +1,34 @@
 import logo from "./logo.svg";
 import "./App.css";
-import Map from "./Components/Map.component/Map";
+import NaturalBreaksMap from "./Components/Map.component/NaturalBreaksMap";
+import EqualIntervalsMap from "./Components/Map.component/EqualIntervalsMap";
 import Histogram from "./Components/Histogram.component/Histogram";
 import Upload from "./Components/Upload.component/Upload";
 import { Jenks } from "jenks";
 import { data } from "./Components/data";
 import { useState, useEffect, useRef } from "react";
-
+import {getEqualIntervals} from './Utils/equalIntervals'
 function App() {
   const [uploadData, setUploadData] = useState(data);
   const [jenksClasses, setJenksClasses] = useState([
-    0.00035, 0.05508, 0.13621, 0.25262, 0.45994
+    0.1,2,3,4,5
   ]);
   const [equalIntervals, setEqualIntervals] = useState([
-    0.0005, 2, 3, 4, 5
+    0.1,2,3,4,5
   ]);
   console.log(jenksClasses);
+  console.log(equalIntervals)
   useEffect(() => {
-    let n_classes = 5;
+    let n_classes = 4;
     setJenksClasses(new Jenks(uploadData, n_classes).naturalBreak());
+    setEqualIntervals(getEqualIntervals(data))
   }, []);
   return (
     <div className="App">
       <Upload/>
       <div className="MapContainer">
-      <Map jenksClasses={jenksClasses} uploadData={uploadData} />
-      <Map jenksClasses={equalIntervals} uploadData={uploadData} />
+      <NaturalBreaksMap classes={jenksClasses} uploadData={uploadData} />
+      <EqualIntervalsMap classes={equalIntervals} uploadData={uploadData} />
       </div>
       <Histogram />
     </div>

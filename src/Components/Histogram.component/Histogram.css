@@ -1,0 +1,14 @@
+.ChartContainer {
+  height: 80vh;
+  width: 100vw;
+  margin: 15px;
+}
+
+.ErrorMessage {
+  font-family: "Lucida Console", "Courier New", monospace;
+  text-align: center;
+  justify-content: center;
+  padding: 70px 0;
+  color: Red;
+  font-size: 50px;
+}

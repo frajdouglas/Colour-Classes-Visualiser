@@ -8,10 +8,9 @@ import "../../App.css";
 mapboxgl.accessToken =
   "pk.eyJ1IjoiZnJham9uZG91Z2xhczk5IiwiYSI6ImNraTBoY2QxOTAwbmQydHFxaWJyNmJkazQifQ.axKM3VC_rhQviOkkND8v1Q";
 
-const Map = ({ classes, uploadData, mapTitle }) => {
+const Map = ({ classes, geomData, mapTitle }) => {
   const mapContainer = useRef();
   const [mapState, setMap] = useState(null);
-  console.log(classes);
   useEffect(() => {
     const map = new mapboxgl.Map({
       container: mapContainer.current,
@@ -20,20 +19,19 @@ const Map = ({ classes, uploadData, mapTitle }) => {
       zoom: 5,
     });
     map.on("load", () => {
-      map.addSource("lads", {
+      map.addSource("geom", {
         type: "geojson",
         // Use a URL for the value for the `data` property.
-        data: lads,
+        data: geomData,
       });
       map.addLayer({
-        id: "lads-fill-layer",
+        id: "geom-fill-layer",
         type: "fill",
-        source: "lads",
+        source: "geom",
         paint: {
           "fill-color": [
             "step",
             ["get", "SHAPE_Area"],
-            // Number(classes[0]),
             "#2FF900",
             Number(classes[1]),
             "#46DD12",
@@ -57,9 +55,9 @@ const Map = ({ classes, uploadData, mapTitle }) => {
         },
       });
       map.addLayer({
-        id: "lads-layer",
+        id: "geom-outline",
         type: "line",
-        source: "lads",
+        source: "geom",
         paint: {
           "line-color": "#FFFFFF",
         },

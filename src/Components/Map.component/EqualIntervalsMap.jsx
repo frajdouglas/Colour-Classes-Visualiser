@@ -64,6 +64,7 @@ const EqualIntervalsMap = ({ classes, uploadData }) => {
   }, [classes]);
   return (
     <div>
+      <div>Equal Intervals</div>
       {classes.map((item) => {
         return (
           <ul key={item}>

@@ -8,11 +8,38 @@ const Upload = () => {
 	const [isFilePicked, setIsFilePicked] = useState(false);
 
 	const changeHandler = (event) => {
+		console.log(event.target.files)
+
+const fileExtension = event.target.files[0].name.split(".").at(-1);
+const allowedFileTypes = ["geojson"];
+if (!allowedFileTypes.includes(fileExtension)) {
+    window.alert(`Files type must be ${allowedFileTypes.join(", ")}`);
+    return false;
+}
 		setSelectedFile(event.target.files[0]);
 		setIsFilePicked(true);
 	};
 
+	// NEED A SERVER TO HANDLE THE FILE UPLOAD
 	const handleSubmission = () => {
+		// const formData = new FormData();
+
+		// formData.append('File', selectedFile);
+
+		// fetch(
+		// 	'https://freeimage.host/api/1/upload?key=<YOUR_API_KEY>',
+		// 	{
+		// 		method: 'POST',
+		// 		body: formData,
+		// 	}
+		// )
+		// 	.then((response) => response.json())
+		// 	.then((result) => {
+		// 		console.log('Success:', result);
+		// 	})
+		// 	.catch((error) => {
+		// 		console.error('Error:', error);
+		// 	});
 	};
 
 	return(

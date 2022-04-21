@@ -8,17 +8,16 @@ import "../../App.css";
 mapboxgl.accessToken =
   "pk.eyJ1IjoiZnJham9uZG91Z2xhczk5IiwiYSI6ImNraTBoY2QxOTAwbmQydHFxaWJyNmJkazQifQ.axKM3VC_rhQviOkkND8v1Q";
 
-const NaturalBreaksMap = ({ classes, uploadData }) => {
+const Map = ({ classes, uploadData, mapTitle }) => {
   const mapContainer = useRef();
   const [mapState, setMap] = useState(null);
   console.log(classes);
-
   useEffect(() => {
     const map = new mapboxgl.Map({
       container: mapContainer.current,
       style: "mapbox://styles/mapbox/dark-v10",
       center: [-2.2852642, 53.509843],
-      zoom: 9,
+      zoom: 5,
     });
     map.on("load", () => {
       map.addSource("lads", {
@@ -32,19 +31,28 @@ const NaturalBreaksMap = ({ classes, uploadData }) => {
         source: "lads",
         paint: {
           "fill-color": [
-            "interpolate",
-            ["linear"],
+            "step",
             ["get", "SHAPE_Area"],
-            Number(classes[0]),
-            "#f1eef6",
+            // Number(classes[0]),
+            "#2FF900",
             Number(classes[1]),
-            "#d7b5d8",
+            "#46DD12",
             Number(classes[2]),
-            "#df65b0",
+            "#5DC125",
             Number(classes[3]),
-            "#dd1c77",
+            "#74A638",
             Number(classes[4]),
-            "#980043",
+            "#8B8A4B",
+            Number(classes[5]),
+            "#A26E5E",
+            Number(classes[6]),
+            "#B95371",
+            Number(classes[7]),
+            "#D03784",
+            Number(classes[8]),
+            "#E71B97",
+            Number(classes[9]),
+            "#FF00AA"
           ],
         },
       });
@@ -65,7 +73,7 @@ const NaturalBreaksMap = ({ classes, uploadData }) => {
   }, [classes]);
   return (
     <div>
-      <div>Natural Breaks</div>
+        <div>{mapTitle}</div>
       {classes.map((item) => {
         return (
           <ul key={item}>
@@ -73,7 +81,6 @@ const NaturalBreaksMap = ({ classes, uploadData }) => {
           </ul>
         );
       })}
-
       <div
         ref={mapContainer}
         style={{ width: "45vw", height: "75vh", margin: "15px" }}
@@ -82,4 +89,4 @@ const NaturalBreaksMap = ({ classes, uploadData }) => {
   );
 };
 
-export default NaturalBreaksMap;
+export default Map;

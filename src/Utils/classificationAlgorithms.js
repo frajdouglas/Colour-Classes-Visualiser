@@ -30,14 +30,21 @@ export const getNaturalBreaks = (dataset, n_classes) => {
 
 export const getQuantiles = (dataset, n_classes) => {
   let sortedDataset = dataset.sort();
-  console.log(sortedDataset);
   let arrayLength = sortedDataset.length;
   let equalClassCount = Math.round(arrayLength / n_classes);
-  console.log(arrayLength, equalClassCount);
   let classesArray = [];
   for (let i = 0; i < n_classes; i++) {
-    console.log(i * equalClassCount);
     classesArray.push(sortedDataset[i * equalClassCount]);
   }
   return classesArray;
 };
+
+// export const getLogScale = (dataset, n_classes) => {
+//     let sortedDataset = dataset.sort();
+//     const highestValue = Math.max(...dataset);
+//     let classesArray = [];
+//     for (let i = 0; i < n_classes; i++) {
+//       classesArray.push(sortedDataset[i * equalClassCount]);
+//     }
+//     return classesArray;
+//   };

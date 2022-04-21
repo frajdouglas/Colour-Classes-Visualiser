@@ -70,20 +70,10 @@ const Map = ({ classes, geomData, mapTitle }) => {
     };
   }, [classes]);
   return (
-    <div>
-        <div>{mapTitle}</div>
-      {classes.map((item) => {
-        return (
-          <ul key={item}>
-            <li>{item}</li>
-          </ul>
-        );
-      })}
       <div
         ref={mapContainer}
-        style={{ width: "45vw", height: "75vh", margin: "15px" }}
+        style={{ width: "50vw", height: "50vh"}}
       />
-    </div>
   );
 };
 

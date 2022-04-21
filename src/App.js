@@ -1,5 +1,6 @@
 import "./App.css";
 import Map from "./Components/Map.component/Map";
+import { Legend } from "./Components/Legend.component/Legend";
 import Upload from "./Components/Upload.component/Upload";
 import { data } from "./Components/data";
 import { lads } from "./Components/Local_Authority_Districts";
@@ -25,7 +26,7 @@ function App() {
     // setUploadData(getDataFromGeojson(lads));
     setJenksClasses(getNaturalBreaks(uploadData, n_classes));
     setEqualIntervals(getEqualIntervals(uploadData, n_classes));
-    setQuantiles(getQuantiles(uploadData,n_classes));
+    setQuantiles(getQuantiles(uploadData, n_classes));
   }, [uploadData]);
 
   const changeHandler = (event) => {
@@ -63,26 +64,37 @@ function App() {
         </div>
       ) : (
         <p>Select a file to show details</p>
-      )}
-      <div>
+      )} 
+       <div>
         <button onClick={handleSubmission}>Submit</button>
       </div>
       <div className="MapContainer">
-        <Map
-          classes={jenksClasses}
-          geomData={geomData}
-          mapTitle="Natural Breaks"
-        />
-        <Map
-          classes={equalIntervals}
-          geomData={geomData}
-          mapTitle="Equal Intervals"
-        />
-        <Map
-          classes={quantiles}
-          geomData={geomData}
-          mapTitle="Quantiles"
-        />
+        <div className="Map1">
+          <Map
+            classes={jenksClasses}
+            geomData={geomData}
+            mapTitle="Natural Breaks"
+          />
+          <div className="Legend1">
+            <Legend mapTitle="Natural Breaks" classes={jenksClasses} />
+          </div>
+        </div>
+        <div className="Map2">
+          <Map
+            classes={equalIntervals}
+            geomData={geomData}
+            mapTitle="Equal Intervals"
+          />
+          <div className="Legend2">
+            <Legend mapTitle="Equal Intervals" classes={equalIntervals} />
+          </div>
+        </div>
+        <div className="Map3">
+          <Map classes={quantiles} geomData={geomData} mapTitle="Quantiles" />
+          <div className="Legend3">
+            <Legend mapTitle="Quantiles" classes={quantiles} />
+          </div>
+        </div>
       </div>
     </div>
   );

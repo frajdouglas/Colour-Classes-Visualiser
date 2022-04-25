@@ -72,7 +72,7 @@ const Map = ({ classes, geomData, mapTitle }) => {
   return (
       <div
         ref={mapContainer}
-        style={{ width: "50vw", height: "50vh"}}
+        style={{ width: "100%", height: "100%" }}
       />
   );
 };

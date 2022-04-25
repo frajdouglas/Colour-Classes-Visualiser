@@ -51,22 +51,29 @@ function App() {
   console.log(jenksClasses);
   return (
     <div className="App">
-      <input type="file" name="file" onChange={changeHandler} />
-      {isFilePicked ? (
-        <div>
-          <p>Filename: {selectedFile.name}</p>
-          <p>Filetype: {selectedFile.type}</p>
-          <p>Size in bytes: {selectedFile.size}</p>
-          <p>
-            lastModifiedDate:{" "}
-            {selectedFile.lastModifiedDate.toLocaleDateString()}
-          </p>
+      <div className="Toolbar">
+        <div className="Title">Symbology Helper</div>
+        <div className="Info">INFO</div>
+        <div className="Upload">
+          <input type="file" name="file" onChange={changeHandler} />
+          {isFilePicked ? (
+            <div>
+              <p>Filename: {selectedFile.name}</p>
+              <p>Filetype: {selectedFile.type}</p>
+              <p>Size in bytes: {selectedFile.size}</p>
+              <p>
+                lastModifiedDate:{" "}
+                {selectedFile.lastModifiedDate.toLocaleDateString()}
+              </p>
+            </div>
+          ) : (
+            <p>Select a file to show details</p>
+          )}
+
+          <div>
+            <button onClick={handleSubmission}>Submit</button>
+          </div>
         </div>
-      ) : (
-        <p>Select a file to show details</p>
-      )} 
-       <div>
-        <button onClick={handleSubmission}>Submit</button>
       </div>
       <div className="MapContainer">
         <div className="Map1">

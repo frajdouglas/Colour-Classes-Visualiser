@@ -3,6 +3,7 @@ import Map from "./Components/Map.component/Map";
 import { Legend } from "./Components/Legend.component/Legend";
 import Upload from "./Components/Upload.component/Upload";
 import { data } from "./Components/data";
+import { Info } from "./Components/Info.component/Info";
 import { lads } from "./Components/Local_Authority_Districts";
 import { cas } from "./Components/Local_Authority_Districts copy";
 import { useState, useEffect } from "react";
@@ -66,7 +67,7 @@ function App() {
     <div className="App">
       <div className="Toolbar">
         <div className="Title">Symbology Helper</div>
-        <div className="Info">INFO</div>
+        <Info/>
         <div className="Upload">
           <input type="file" name="file" onChange={changeHandler} />
           {isFilePicked ? (

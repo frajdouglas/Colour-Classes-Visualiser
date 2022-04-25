@@ -13,10 +13,16 @@
 }
 .Title {
   border: solid;
+  font-weight: bold;
+  font-size: 30px;
   margin: 10px;
+  display: flex;
+  justify-content: center;
 }
 .Info {
   border: solid;
+  display: flex;
+  flex-direction: column;
   margin: 10px;
 }
 .Upload {
@@ -114,6 +120,7 @@
 .AlgoName {
   padding-top: 20px;
   padding-bottom: 20px;
+  font-weight: bold;
   display: flex;
   justify-content: center;
 }

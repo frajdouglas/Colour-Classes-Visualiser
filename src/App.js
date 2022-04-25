@@ -21,6 +21,19 @@ function App() {
   const [selectedFile, setSelectedFile] = useState();
   const [isFilePicked, setIsFilePicked] = useState(false);
 
+  const colourArray = [
+    "#fff7fb",
+    "#ece2f0",
+    "#d0d1e6",
+    "#a6bddb",
+    "#67a9cf",
+    "#3690c0",
+    "#02818a",
+    "#016c59",
+    "#014636",
+    "#023020",
+  ];
+
   useEffect(() => {
     let n_classes = 10;
     // setUploadData(getDataFromGeojson(lads));
@@ -81,9 +94,14 @@ function App() {
             classes={jenksClasses}
             geomData={geomData}
             mapTitle="Natural Breaks"
+            colourArray={colourArray}
           />
           <div className="Legend1">
-            <Legend mapTitle="Natural Breaks" classes={jenksClasses} />
+            <Legend
+              mapTitle="Natural Breaks"
+              classes={jenksClasses}
+              colourArray={colourArray}
+            />
           </div>
         </div>
         <div className="Map2">
@@ -91,15 +109,29 @@ function App() {
             classes={equalIntervals}
             geomData={geomData}
             mapTitle="Equal Intervals"
+            colourArray={colourArray}
           />
           <div className="Legend2">
-            <Legend mapTitle="Equal Intervals" classes={equalIntervals} />
+            <Legend
+              mapTitle="Equal Intervals"
+              classes={equalIntervals}
+              colourArray={colourArray}
+            />
           </div>
         </div>
         <div className="Map3">
-          <Map classes={quantiles} geomData={geomData} mapTitle="Quantiles" />
+          <Map
+            classes={quantiles}
+            geomData={geomData}
+            mapTitle="Quantiles"
+            colourArray={colourArray}
+          />
           <div className="Legend3">
-            <Legend mapTitle="Quantiles" classes={quantiles} />
+            <Legend
+              mapTitle="Quantiles"
+              classes={quantiles}
+              colourArray={colourArray}
+            />
           </div>
         </div>
       </div>

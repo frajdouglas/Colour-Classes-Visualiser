@@ -8,9 +8,10 @@ import "../../App.css";
 mapboxgl.accessToken =
   "pk.eyJ1IjoiZnJham9uZG91Z2xhczk5IiwiYSI6ImNraTBoY2QxOTAwbmQydHFxaWJyNmJkazQifQ.axKM3VC_rhQviOkkND8v1Q";
 
-const Map = ({ classes, geomData, mapTitle }) => {
+const Map = ({ classes, geomData, mapTitle, colourArray }) => {
   const mapContainer = useRef();
   const [mapState, setMap] = useState(null);
+
   useEffect(() => {
     const map = new mapboxgl.Map({
       container: mapContainer.current,
@@ -32,25 +33,25 @@ const Map = ({ classes, geomData, mapTitle }) => {
           "fill-color": [
             "step",
             ["get", "SHAPE_Area"],
-            "#2FF900",
+            colourArray[0],
             Number(classes[1]),
-            "#46DD12",
+            colourArray[1],
             Number(classes[2]),
-            "#5DC125",
+            colourArray[2],
             Number(classes[3]),
-            "#74A638",
+            colourArray[3],
             Number(classes[4]),
-            "#8B8A4B",
+            colourArray[4],
             Number(classes[5]),
-            "#A26E5E",
+            colourArray[5],
             Number(classes[6]),
-            "#B95371",
+            colourArray[6],
             Number(classes[7]),
-            "#D03784",
+            colourArray[7],
             Number(classes[8]),
-            "#E71B97",
+            colourArray[8],
             Number(classes[9]),
-            "#FF00AA"
+            colourArray[9],
           ],
         },
       });
@@ -69,12 +70,7 @@ const Map = ({ classes, geomData, mapTitle }) => {
       map.remove();
     };
   }, [classes]);
-  return (
-      <div
-        ref={mapContainer}
-        style={{ width: "100%", height: "100%" }}
-      />
-  );
+  return <div ref={mapContainer} style={{ width: "100%", height: "100%" }} />;
 };
 
 export default Map;

@@ -52,14 +52,38 @@ function App() {
       window.alert(`Files type must be ${allowedFileTypes.join(", ")}`);
       return false;
     }
+    console.log(event.target);
     setSelectedFile(event.target.files[0]);
     setIsFilePicked(true);
   };
 
   const handleSubmission = () => {
-    setGeomData(cas);
-    setUploadData(getDataFromGeojson(cas));
-    console.log("SUBMITTED");
+    const formData = new FormData();
+    console.log(formData);
+    formData.append("File", selectedFile);
+    console.log(formData);
+
+    fetch("http://localhost:5000/geom", {
+      method: "POST",
+      mode: 'no-cors',
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: 1
+    })
+      .then((response) => {
+        console.log(response.json());
+      })
+      .then((result) => {
+        console.log("Success:", result);
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
+
+    // setGeomData(cas);
+    // setUploadData(getDataFromGeojson(cas));
+    // console.log("SUBMITTED");
   };
 
   console.log(jenksClasses);
@@ -67,7 +91,7 @@ function App() {
     <div className="App">
       <div className="Toolbar">
         <div className="Title">Symbology Helper</div>
-        <Info/>
+        <Info />
         <div className="Upload">
           <input type="file" name="file" onChange={changeHandler} />
           {isFilePicked ? (

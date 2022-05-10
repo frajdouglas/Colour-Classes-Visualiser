@@ -59,53 +59,18 @@ function App() {
   };
 
   const handleSubmission = () => {
-    // uploadGeojson(selectedFile)
-getGeojson(selectedFile)
-.then((geometryData) => {
-  setGeomData(geometryData)
-})    
-    // const formData = new FormData();
-    // console.log(formData, selectedFile);
-    // formData.append("File", selectedFile);
-    // console.log(formData, selectedFile);
-
-  //   fetch("http://localhost:5000/geom", {
-  //     method: 'POST',
-  //     body: formData
-  //   })
-  //     .then((response) => {
-  //       console.log(response);
-  //     })
-  //     .then((result) => {
-  //       console.log("Success:", result);
-  //     })
-  //     .catch((error) => {
-  //       console.error("Error:", error);
-  //     });
-
-  //   // setGeomData(cas);
-  //   // setUploadData(getDataFromGeojson(cas));
-  //   // console.log("SUBMITTED");
-  // };
-
-  // fetch("http://localhost:5000/geom?name=this", {
-  //   method: 'GET',
-  // })
-  //   .then((response) => {
-  //     console.log(response);
-  //   })
-  //   .then((result) => {
-  //     console.log("Success:", result);
-  //   })
-  //   .catch((error) => {
-  //     console.error("Error:", error);
-  //   });
-
-  // setGeomData(cas);
-  // setUploadData(getDataFromGeojson(cas));
-  // console.log("SUBMITTED");
-};
-console.log(geomData)
+    uploadGeojson(selectedFile).then((data) => {
+      console.log(data)
+      getGeojson(selectedFile).then((data) => {
+        console.log(data)
+         setGeomData(data);
+      })
+    });
+    // setGeomData(cas);
+    // setUploadData(getDataFromGeojson(cas));
+    // console.log("SUBMITTED");
+  };
+  console.log(geomData);
   console.log(jenksClasses);
   return (
     <div className="App">

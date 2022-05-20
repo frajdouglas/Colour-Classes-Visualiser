@@ -6,7 +6,7 @@ import { data } from "./Components/data";
 import { Info } from "./Components/Info.component/Info";
 import { lads } from "./Components/Local_Authority_Districts";
 import { cas } from "./Components/Local_Authority_Districts copy";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import {
   getEqualIntervals,
   getNaturalBreaks,
@@ -14,6 +14,7 @@ import {
 } from "./Utils/classificationAlgorithms";
 import { getDataFromGeojson } from "./Utils/getDataFromGeojson";
 import { uploadGeojson, getGeojson } from "./Utils/api";
+
 function App() {
   const [geomData, setGeomData] = useState(lads);
   const [uploadData, setUploadData] = useState(getDataFromGeojson(lads));
@@ -22,6 +23,7 @@ function App() {
   const [quantiles, setQuantiles] = useState([0.1, 2, 3, 4, 5]);
   const [selectedFile, setSelectedFile] = useState();
   const [isFilePicked, setIsFilePicked] = useState(false);
+  const fileObject = useRef({})
 
   const colourArray = [
     "#fff7fb",
@@ -46,32 +48,61 @@ function App() {
 
   const changeHandler = (event) => {
     console.log(event.target.files);
+    const fileInput = event.target;
+    console.log(fileInput)
 
-    const fileExtension = event.target.files[0].name.split(".").at(-1);
-    const allowedFileTypes = ["geojson"];
-    if (!allowedFileTypes.includes(fileExtension)) {
-      window.alert(`Files type must be ${allowedFileTypes.join(", ")}`);
-      return false;
-    }
+    // fileInput.onchange = () => {
+      const reader = new FileReader()
+      reader.onload = (e) => {
+        // console.log(e.target.result)
+        fileObject.current = e.target.result
+        console.log(fileObject.current)
+
+      }
+      for (let file of fileInput.files) {
+        reader.readAsText(file)
+      }
+    // }
+
+    // const fileExtension = event.target.files[0].name.split(".").at(-1);
+    // const allowedFileTypes = ["geojson"];
+    // if (!allowedFileTypes.includes(fileExtension)) {
+    //   window.alert(`Files type must be ${allowedFileTypes.join(", ")}`);
+    //   return false;
+    // }
     console.log(event.target);
     setSelectedFile(event.target.files[0]);
     setIsFilePicked(true);
   };
 
+
   const handleSubmission = () => {
-    uploadGeojson(selectedFile).then((data) => {
-      console.log(data)
-      getGeojson(selectedFile).then((data) => {
-        console.log(data)
-         setGeomData(data);
-      })
-    });
+    // const formData = new FormData();
+    // formData.append("File", selectedFile);
+    localStorage.setItem("geoData", fileObject.current);
+    // console.log(formData.keys());
+
+    console.log(localStorage.getItem("geoData"));
+    // uploadGeojson(selectedFile).then((data) => {
+    //   console.log(data)
+    //   getGeojson(selectedFile).then((data) => {
+    //     console.log(data)
+    //      setGeomData(data);
+    //   })
+    // });
     // setGeomData(cas);
     // setUploadData(getDataFromGeojson(cas));
     // console.log("SUBMITTED");
   };
   console.log(geomData);
   console.log(jenksClasses);
+
+  // session storage testing
+  // localStorage.setItem("localData", JSON.stringify(cas))
+  // let localItem = localStorage.getItem("localData")
+  // // console.log(sessionStorage.getItem("sessionData"))
+  // console.log(JSON.parse(localItem))
+
   return (
     <div className="App">
       <div className="Toolbar">

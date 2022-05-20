@@ -47,16 +47,16 @@ function App() {
   }, [uploadData]);
 
   const changeHandler = (event) => {
-    console.log(event.target.files);
+    // console.log(event.target.files);
     const fileInput = event.target;
-    console.log(fileInput)
+    // console.log(fileInput)
 
     // fileInput.onchange = () => {
       const reader = new FileReader()
       reader.onload = (e) => {
         // console.log(e.target.result)
         fileObject.current = e.target.result
-        console.log(fileObject.current)
+        // console.log(fileObject.current)
 
       }
       for (let file of fileInput.files) {
@@ -70,7 +70,7 @@ function App() {
     //   window.alert(`Files type must be ${allowedFileTypes.join(", ")}`);
     //   return false;
     // }
-    console.log(event.target);
+    // console.log(event.target);
     setSelectedFile(event.target.files[0]);
     setIsFilePicked(true);
   };
@@ -79,6 +79,7 @@ function App() {
   const handleSubmission = () => {
     // const formData = new FormData();
     // formData.append("File", selectedFile);
+    localStorage.clear();
     localStorage.setItem("geoData", fileObject.current);
     // console.log(formData.keys());
 
@@ -90,12 +91,12 @@ function App() {
     //      setGeomData(data);
     //   })
     // });
-    // setGeomData(cas);
+    // setGeomData(fileObject.current);
     // setUploadData(getDataFromGeojson(cas));
     // console.log("SUBMITTED");
   };
-  console.log(geomData);
-  console.log(jenksClasses);
+  // console.log(geomData);
+  // console.log(jenksClasses);
 
   // session storage testing
   // localStorage.setItem("localData", JSON.stringify(cas))

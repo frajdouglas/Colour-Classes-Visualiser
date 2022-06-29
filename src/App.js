@@ -21,9 +21,9 @@ function App() {
   const [jenksClasses, setJenksClasses] = useState([0.1, 2, 3, 4, 5]);
   const [equalIntervals, setEqualIntervals] = useState([0.1, 2, 3, 4, 5]);
   const [quantiles, setQuantiles] = useState([0.1, 2, 3, 4, 5]);
-  const [selectedFile, setSelectedFile] = useState();
+  const [selectedFile, setSelectedFile] = useState(JSON.stringify(lads));
   const [isFilePicked, setIsFilePicked] = useState(false);
-  const fileObject = useRef({})
+  const fileObject = useRef({});
 
   const colourArray = [
     "#fff7fb",
@@ -46,63 +46,84 @@ function App() {
     setQuantiles(getQuantiles(uploadData, n_classes));
   }, [uploadData]);
 
-  const changeHandler = (event) => {
-    // console.log(event.target.files);
-    const fileInput = event.target;
-    // console.log(fileInput)
-
-    // fileInput.onchange = () => {
-      const reader = new FileReader()
-      reader.onload = (e) => {
-        // console.log(e.target.result)
-        fileObject.current = e.target.result
-        // console.log(fileObject.current)
-
-      }
-      for (let file of fileInput.files) {
-        reader.readAsText(file)
-      }
-    // }
-
-    // const fileExtension = event.target.files[0].name.split(".").at(-1);
-    // const allowedFileTypes = ["geojson"];
-    // if (!allowedFileTypes.includes(fileExtension)) {
-    //   window.alert(`Files type must be ${allowedFileTypes.join(", ")}`);
-    //   return false;
-    // }
-    // console.log(event.target);
-    setSelectedFile(event.target.files[0]);
-    setIsFilePicked(true);
+  const handleChange = (e) => {
+    const fileReader = new FileReader();
+    fileReader.readAsText(e.target.files[0], "UTF-8");
+    fileReader.onload = (e) => {
+      console.log("e.target", e.target);
+      // const fileExtension = e.target.files[0].name.split(".").at(-1);
+      // const allowedFileTypes = ["geojson"];
+      // if (!allowedFileTypes.includes(fileExtension)) {
+      //   window.alert(`Files type must be ${allowedFileTypes.join(", ")}`);
+      //   return false;
+      // } else {
+        setSelectedFile(e.target.result);
+        setIsFilePicked(true);
+      // }
+    };
   };
 
-
-  const handleSubmission = () => {
-    // const formData = new FormData();
-    // formData.append("File", selectedFile);
-    localStorage.clear();
-    localStorage.setItem("geoData", fileObject.current);
-    // console.log(formData.keys());
-
-    console.log(localStorage.getItem("geoData"));
-    // uploadGeojson(selectedFile).then((data) => {
-    //   console.log(data)
-    //   getGeojson(selectedFile).then((data) => {
-    //     console.log(data)
-    //      setGeomData(data);
-    //   })
-    // });
-    // setGeomData(fileObject.current);
-    // setUploadData(getDataFromGeojson(cas));
-    // console.log("SUBMITTED");
+  const handleSubmission = (e) => {
+    console.log("submit");
   };
-  // console.log(geomData);
-  // console.log(jenksClasses);
 
-  // session storage testing
-  // localStorage.setItem("localData", JSON.stringify(cas))
-  // let localItem = localStorage.getItem("localData")
-  // // console.log(sessionStorage.getItem("sessionData"))
-  // console.log(JSON.parse(localItem))
+  console.log(selectedFile);
+  // const changeHandler = (event) => {
+  //   // console.log(event.target.files);
+  //   const fileInput = event.target;
+  //   // console.log(fileInput)
+
+  //   // fileInput.onchange = () => {
+  //     const reader = new FileReader()
+  //     reader.onload = (e) => {
+  //       // console.log(e.target.result)
+  //       fileObject.current = e.target.result
+  //       // console.log(fileObject.current)
+
+  //     }
+  //     for (let file of fileInput.files) {
+  //       reader.readAsText(file)
+  //     }
+  //   // }
+
+  //   // const fileExtension = event.target.files[0].name.split(".").at(-1);
+  //   // const allowedFileTypes = ["geojson"];
+  //   // if (!allowedFileTypes.includes(fileExtension)) {
+  //   //   window.alert(`Files type must be ${allowedFileTypes.join(", ")}`);
+  //   //   return false;
+  //   // }
+  //   // console.log(event.target);
+  //   setSelectedFile(event.target.files[0]);
+  //   setIsFilePicked(true);
+  // };
+
+  // const handleSubmission = () => {
+  //   // const formData = new FormData();
+  //   // formData.append("File", selectedFile);
+  //   // localStorage.clear();
+  //   // localStorage.setItem("geoData", fileObject.current);
+  //   // console.log(formData.keys());
+
+  //   // console.log(localStorage.getItem("geoData"));
+  //   // uploadGeojson(selectedFile).then((data) => {
+  //   //   console.log(data)
+  //   //   getGeojson(selectedFile).then((data) => {
+  //   //     console.log(data)
+  //   //      setGeomData(data);
+  //   //   })
+  //   // });
+  //   // setGeomData(fileObject.current);
+  //   // setUploadData(getDataFromGeojson(cas));
+  //   // console.log("SUBMITTED");
+  // };
+  // // console.log(geomData);
+  // // console.log(jenksClasses);
+
+  // // session storage testing
+  // // localStorage.setItem("localData", JSON.stringify(cas))
+  // // let localItem = localStorage.getItem("localData")
+  // // // console.log(sessionStorage.getItem("sessionData"))
+  // // console.log(JSON.parse(localItem))
 
   return (
     <div className="App">
@@ -110,16 +131,10 @@ function App() {
         <div className="Title">Symbology Helper</div>
         <Info />
         <div className="Upload">
-          <input type="file" name="file" onChange={changeHandler} />
+          <input type="file" name="file" onChange={handleChange} />
           {isFilePicked ? (
             <div>
-              <p>Filename: {selectedFile.name}</p>
-              <p>Filetype: {selectedFile.type}</p>
-              <p>Size in bytes: {selectedFile.size}</p>
-              <p>
-                lastModifiedDate:{" "}
-                {selectedFile.lastModifiedDate.toLocaleDateString()}
-              </p>
+              <p>Filetype: {JSON.parse(selectedFile).type}</p>
             </div>
           ) : (
             <p>Select a file to show details</p>
@@ -134,7 +149,7 @@ function App() {
         <div className="Map1">
           <Map
             classes={jenksClasses}
-            geomData={geomData}
+            geomData={JSON.parse(selectedFile)}
             mapTitle="Natural Breaks"
             colourArray={colourArray}
           />
@@ -149,7 +164,7 @@ function App() {
         <div className="Map2">
           <Map
             classes={equalIntervals}
-            geomData={geomData}
+            geomData={JSON.parse(selectedFile)}
             mapTitle="Equal Intervals"
             colourArray={colourArray}
           />
@@ -164,7 +179,7 @@ function App() {
         <div className="Map3">
           <Map
             classes={quantiles}
-            geomData={geomData}
+            geomData={JSON.parse(selectedFile)}
             mapTitle="Quantiles"
             colourArray={colourArray}
           />

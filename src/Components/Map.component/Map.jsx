@@ -13,9 +13,9 @@ const Map = ({ classes, geomData, mapTitle, colourArray }) => {
   const [mapState, setMap] = useState(null);
 
   useEffect(() => {
-    // console.log(geomData)
-    let geomFromLocalStorage = JSON.parse(localStorage.getItem("geoData"))
-    console.log(geomFromLocalStorage)
+    console.log(geomData)
+    // let geomFromLocalStorage = JSON.parse(localStorage.getItem("geoData"))
+    // console.log(geomFromLocalStorage)
 
     const map = new mapboxgl.Map({
       container: mapContainer.current,
@@ -27,7 +27,7 @@ const Map = ({ classes, geomData, mapTitle, colourArray }) => {
       map.addSource("geom", {
         type: "geojson",
         // Use a URL for the value for the `data` property.
-        data: geomFromLocalStorage,
+        data: geomData,
       });
       // map.addLayer({
       //   id: "geom-fill-layer",

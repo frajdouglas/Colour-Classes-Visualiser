@@ -12,13 +12,16 @@ import {
   getNaturalBreaks,
   getQuantiles,
 } from "./Utils/classificationAlgorithms";
-import { getDataFromGeojson, getMetricsFromGeojson } from "./Utils/getDataFromGeojson";
+import {
+  getDataFromGeojson,
+  getMetricsFromGeojson,
+} from "./Utils/getDataFromGeojson";
 import { uploadGeojson, getGeojson } from "./Utils/api";
 
 function App() {
   const [geomData, setGeomData] = useState(lads);
   const [uploadData, setUploadData] = useState(getDataFromGeojson(lads));
-  const [metricsList, setMetricsList] = useState(['Metric']);
+  const [metricsList, setMetricsList] = useState(["SHAPE_Area","SHAPE_Length"]);
 
   const [jenksClasses, setJenksClasses] = useState([0.1, 2, 3, 4, 5]);
   const [equalIntervals, setEqualIntervals] = useState([0.1, 2, 3, 4, 5]);
@@ -42,11 +45,11 @@ function App() {
 
   useEffect(() => {
     let n_classes = 10;
-    setMetricsList('NEXT METRIC')
+    setMetricsList(["SHAPE_Area","SHAPE_Length", "OBJECTID"]);
     // setUploadData(getDataFromGeojson(JSON.stringify(lads)));
-    setJenksClasses(getNaturalBreaks(uploadData, n_classes));
-    setEqualIntervals(getEqualIntervals(uploadData, n_classes));
-    setQuantiles(getQuantiles(uploadData, n_classes));
+    // setJenksClasses(getNaturalBreaks(uploadData, n_classes));
+    // setEqualIntervals(getEqualIntervals(uploadData, n_classes));
+    // setQuantiles(getQuantiles(uploadData, n_classes));
   }, [uploadData]);
 
   const handleChange = (e) => {
@@ -66,6 +69,17 @@ function App() {
     };
   };
 
+const handleDropdownChange = (e) => {
+console.log(e.target.value)
+let valuesToClassify = getMetricsFromGeojson(e.target.value,selectedFile)
+console.log(valuesToClassify)
+let n_classes = 10;
+setJenksClasses(getNaturalBreaks(valuesToClassify, n_classes));
+    setEqualIntervals(getEqualIntervals(valuesToClassify, n_classes));
+    setQuantiles(getQuantiles(valuesToClassify, n_classes));
+}
+
+console.log(metricsList)
   return (
     <div className="App">
       <div className="Toolbar">
@@ -80,6 +94,11 @@ function App() {
           ) : (
             <p>Select a file to show details</p>
           )}
+          <select name="metricSelector" id="metricSelector" onChange={handleDropdownChange}>
+            {metricsList.map((item) => {
+              return <option value={item}>{item}</option>
+            })}
+          </select>
 
           {/* <div>
             <button onClick={handleSubmission}>Submit</button>

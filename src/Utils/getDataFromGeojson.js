@@ -1,28 +1,27 @@
-
 export const getDataFromGeojson = (geometry) => {
-    let valueArray = []
-    console.log(geometry)
-    // let features = JSON.parse(geometry).features
-    let features = geometry.features
-    // console.log(features)
+  let valueArray = [];
+  console.log(geometry);
+  // let features = JSON.parse(geometry).features
+  let features = geometry.features;
+  // console.log(features)
 
-let properties = features.forEach((item) => {
-    valueArray.push(item.properties.SHAPE_Area)
-})
-// console.log(valueArray)
-return valueArray
-}
+  let properties = features.forEach((item) => {
+    valueArray.push(item.properties.SHAPE_Area);
+  });
+  // console.log(valueArray)
+  return valueArray;
+};
 
-export const getMetricsFromGeojson = (geometry) => {
-    let valueArray = []
-    console.log(geometry)
-    // let features = JSON.parse(geometry).features
-    let features = geometry.features
-    // console.log(features)
+export const getMetricsFromGeojson = (metricName, geometry) => {
+  let valueArray = [];
+  console.log(geometry, metricName);
+  let features = JSON.parse(geometry).features;
+  //     let features = geometry.features
+  console.log(features);
 
-let properties = features.forEach((item) => {
-    valueArray.push(item.properties.SHAPE_Area)
-})
-// console.log(valueArray)
-return valueArray
-}
+  features.forEach((item) => {
+    valueArray.push(item.properties[metricName]);
+  });
+  console.log(valueArray);
+  return valueArray;
+};

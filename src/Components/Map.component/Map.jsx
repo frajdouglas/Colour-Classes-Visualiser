@@ -13,7 +13,7 @@ const Map = ({ classes, geomData, mapTitle, colourArray }) => {
   const [mapState, setMap] = useState(null);
 
   useEffect(() => {
-    console.log(geomData)
+    // console.log(geomData)
     // let geomFromLocalStorage = JSON.parse(localStorage.getItem("geoData"))
     // console.log(geomFromLocalStorage)
 

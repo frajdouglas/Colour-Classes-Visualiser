@@ -12,12 +12,14 @@ import {
   getNaturalBreaks,
   getQuantiles,
 } from "./Utils/classificationAlgorithms";
-import { getDataFromGeojson } from "./Utils/getDataFromGeojson";
+import { getDataFromGeojson, getMetricsFromGeojson } from "./Utils/getDataFromGeojson";
 import { uploadGeojson, getGeojson } from "./Utils/api";
 
 function App() {
   const [geomData, setGeomData] = useState(lads);
   const [uploadData, setUploadData] = useState(getDataFromGeojson(lads));
+  const [metricsList, setMetricsList] = useState(['Metric']);
+
   const [jenksClasses, setJenksClasses] = useState([0.1, 2, 3, 4, 5]);
   const [equalIntervals, setEqualIntervals] = useState([0.1, 2, 3, 4, 5]);
   const [quantiles, setQuantiles] = useState([0.1, 2, 3, 4, 5]);
@@ -40,7 +42,8 @@ function App() {
 
   useEffect(() => {
     let n_classes = 10;
-    // setUploadData(getDataFromGeojson(lads));
+    setMetricsList('NEXT METRIC')
+    // setUploadData(getDataFromGeojson(JSON.stringify(lads)));
     setJenksClasses(getNaturalBreaks(uploadData, n_classes));
     setEqualIntervals(getEqualIntervals(uploadData, n_classes));
     setQuantiles(getQuantiles(uploadData, n_classes));
@@ -48,82 +51,20 @@ function App() {
 
   const handleChange = (e) => {
     const fileReader = new FileReader();
-    fileReader.readAsText(e.target.files[0], "UTF-8");
+    const fileInput = e.target;
+    fileReader.readAsText(fileInput.files[0], "UTF-8");
     fileReader.onload = (e) => {
-      console.log("e.target", e.target);
-      // const fileExtension = e.target.files[0].name.split(".").at(-1);
-      // const allowedFileTypes = ["geojson"];
-      // if (!allowedFileTypes.includes(fileExtension)) {
-      //   window.alert(`Files type must be ${allowedFileTypes.join(", ")}`);
-      //   return false;
-      // } else {
+      const fileExtension = fileInput.files[0].name.split(".").at(-1);
+      const allowedFileTypes = ["geojson"];
+      if (!allowedFileTypes.includes(fileExtension)) {
+        window.alert(`Files type must be ${allowedFileTypes.join(", ")}`);
+        return false;
+      } else {
         setSelectedFile(e.target.result);
         setIsFilePicked(true);
-      // }
+      }
     };
   };
-
-  const handleSubmission = (e) => {
-    console.log("submit");
-  };
-
-  console.log(selectedFile);
-  // const changeHandler = (event) => {
-  //   // console.log(event.target.files);
-  //   const fileInput = event.target;
-  //   // console.log(fileInput)
-
-  //   // fileInput.onchange = () => {
-  //     const reader = new FileReader()
-  //     reader.onload = (e) => {
-  //       // console.log(e.target.result)
-  //       fileObject.current = e.target.result
-  //       // console.log(fileObject.current)
-
-  //     }
-  //     for (let file of fileInput.files) {
-  //       reader.readAsText(file)
-  //     }
-  //   // }
-
-  //   // const fileExtension = event.target.files[0].name.split(".").at(-1);
-  //   // const allowedFileTypes = ["geojson"];
-  //   // if (!allowedFileTypes.includes(fileExtension)) {
-  //   //   window.alert(`Files type must be ${allowedFileTypes.join(", ")}`);
-  //   //   return false;
-  //   // }
-  //   // console.log(event.target);
-  //   setSelectedFile(event.target.files[0]);
-  //   setIsFilePicked(true);
-  // };
-
-  // const handleSubmission = () => {
-  //   // const formData = new FormData();
-  //   // formData.append("File", selectedFile);
-  //   // localStorage.clear();
-  //   // localStorage.setItem("geoData", fileObject.current);
-  //   // console.log(formData.keys());
-
-  //   // console.log(localStorage.getItem("geoData"));
-  //   // uploadGeojson(selectedFile).then((data) => {
-  //   //   console.log(data)
-  //   //   getGeojson(selectedFile).then((data) => {
-  //   //     console.log(data)
-  //   //      setGeomData(data);
-  //   //   })
-  //   // });
-  //   // setGeomData(fileObject.current);
-  //   // setUploadData(getDataFromGeojson(cas));
-  //   // console.log("SUBMITTED");
-  // };
-  // // console.log(geomData);
-  // // console.log(jenksClasses);
-
-  // // session storage testing
-  // // localStorage.setItem("localData", JSON.stringify(cas))
-  // // let localItem = localStorage.getItem("localData")
-  // // // console.log(sessionStorage.getItem("sessionData"))
-  // // console.log(JSON.parse(localItem))
 
   return (
     <div className="App">
@@ -140,9 +81,9 @@ function App() {
             <p>Select a file to show details</p>
           )}
 
-          <div>
+          {/* <div>
             <button onClick={handleSubmission}>Submit</button>
-          </div>
+          </div> */}
         </div>
       </div>
       <div className="MapContainer">

@@ -14,15 +14,16 @@ import {
 } from "./Utils/classificationAlgorithms";
 import {
   getDataFromGeojson,
-  getMetricsFromGeojson,
+  getMetricsListFromGeojson,
 } from "./Utils/getDataFromGeojson";
 import { uploadGeojson, getGeojson } from "./Utils/api";
 
 function App() {
   const [geomData, setGeomData] = useState(lads);
-  const [uploadData, setUploadData] = useState(getDataFromGeojson(lads));
+  // const [uploadData, setUploadData] = useState(getDataFromGeojson(JSON.stringify(lads)));
   const [metricsList, setMetricsList] = useState(["SHAPE_Area","SHAPE_Length"]);
-
+  const [selectedMetric, setSelectedMetric] = useState(metricsList[0]);
+  const [numberOfClasses, setNumberOfClasses] = useState(10);
   const [jenksClasses, setJenksClasses] = useState([0.1, 2, 3, 4, 5]);
   const [equalIntervals, setEqualIntervals] = useState([0.1, 2, 3, 4, 5]);
   const [quantiles, setQuantiles] = useState([0.1, 2, 3, 4, 5]);
@@ -44,13 +45,8 @@ function App() {
   ];
 
   useEffect(() => {
-    let n_classes = 10;
-    setMetricsList(["SHAPE_Area","SHAPE_Length", "OBJECTID"]);
-    // setUploadData(getDataFromGeojson(JSON.stringify(lads)));
-    // setJenksClasses(getNaturalBreaks(uploadData, n_classes));
-    // setEqualIntervals(getEqualIntervals(uploadData, n_classes));
-    // setQuantiles(getQuantiles(uploadData, n_classes));
-  }, [uploadData]);
+    setMetricsList(getMetricsListFromGeojson(selectedFile));
+  }, [selectedFile]);
 
   const handleChange = (e) => {
     const fileReader = new FileReader();
@@ -71,12 +67,12 @@ function App() {
 
 const handleDropdownChange = (e) => {
 console.log(e.target.value)
-let valuesToClassify = getMetricsFromGeojson(e.target.value,selectedFile)
+let valuesToClassify = getDataFromGeojson(e.target.value,selectedFile)
 console.log(valuesToClassify)
-let n_classes = 10;
-setJenksClasses(getNaturalBreaks(valuesToClassify, n_classes));
-    setEqualIntervals(getEqualIntervals(valuesToClassify, n_classes));
-    setQuantiles(getQuantiles(valuesToClassify, n_classes));
+setSelectedMetric(e.target.value)
+setJenksClasses(getNaturalBreaks(valuesToClassify, numberOfClasses));
+    setEqualIntervals(getEqualIntervals(valuesToClassify, numberOfClasses));
+    setQuantiles(getQuantiles(valuesToClassify, numberOfClasses));
 }
 
 console.log(metricsList)
@@ -94,7 +90,7 @@ console.log(metricsList)
           ) : (
             <p>Select a file to show details</p>
           )}
-          <select name="metricSelector" id="metricSelector" onChange={handleDropdownChange}>
+          <select name="metricSelector" id="metricSelector" selected="OBJECTID" onChange={handleDropdownChange}>
             {metricsList.map((item) => {
               return <option value={item}>{item}</option>
             })}
@@ -112,6 +108,7 @@ console.log(metricsList)
             geomData={JSON.parse(selectedFile)}
             mapTitle="Natural Breaks"
             colourArray={colourArray}
+            selectedMetric={selectedMetric}
           />
           <div className="Legend1">
             <Legend
@@ -127,6 +124,7 @@ console.log(metricsList)
             geomData={JSON.parse(selectedFile)}
             mapTitle="Equal Intervals"
             colourArray={colourArray}
+            selectedMetric={selectedMetric}
           />
           <div className="Legend2">
             <Legend
@@ -142,6 +140,7 @@ console.log(metricsList)
             geomData={JSON.parse(selectedFile)}
             mapTitle="Quantiles"
             colourArray={colourArray}
+            selectedMetric={selectedMetric}
           />
           <div className="Legend3">
             <Legend

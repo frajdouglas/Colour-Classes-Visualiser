@@ -1,6 +1,5 @@
 import React from "react";
-import { useState, useEffect, useRef } from "react";
-import { lads } from "../Local_Authority_Districts";
+import { useEffect, useRef } from "react";
 import mapboxgl from "mapbox-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
 import "../../App.css";
@@ -10,7 +9,6 @@ mapboxgl.accessToken =
 
 const Map = ({ classes, geomData, mapTitle, colourArray, selectedMetric }) => {
   const mapContainer = useRef();
-  const [mapState, setMap] = useState(null);
 
   useEffect(() => {
     const map = new mapboxgl.Map({
@@ -22,7 +20,6 @@ const Map = ({ classes, geomData, mapTitle, colourArray, selectedMetric }) => {
     map.on("load", () => {
       map.addSource("geom", {
         type: "geojson",
-        // Use a URL for the value for the `data` property.
         data: geomData,
       });
       map.addLayer({
@@ -64,7 +61,6 @@ const Map = ({ classes, geomData, mapTitle, colourArray, selectedMetric }) => {
         },
       });
     });
-    setMap(map);
 
     return () => {
       map.remove();

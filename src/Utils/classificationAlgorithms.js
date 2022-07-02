@@ -20,7 +20,9 @@ export const getEqualIntervals = (dataset, n_classes) => {
 };
 
 export const getNaturalBreaks = (dataset, n_classes) => {
-  const numberOfClasses = n_classes - 1;
+  // console.log(n_classes)
+  const numberOfClasses = Number(n_classes) - 1;
+  console.log(typeof(numberOfClasses),numberOfClasses)
   let result = new Jenks(dataset, numberOfClasses).naturalBreak();
   let filteredResult = result.filter((item) => {
     return item !== undefined;
@@ -29,6 +31,8 @@ export const getNaturalBreaks = (dataset, n_classes) => {
 };
 
 export const getQuantiles = (dataset, n_classes) => {
+  console.log(n_classes)
+
   let sortedDataset = dataset.sort();
   let arrayLength = sortedDataset.length;
   let equalClassCount = Math.round(arrayLength / n_classes);

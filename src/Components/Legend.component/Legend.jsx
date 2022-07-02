@@ -1,5 +1,6 @@
 export const Legend = ({ mapTitle, classes, colourArray }) => {
   let legendArray = [];
+  console.log(classes)
   for (let i = 0; i < classes.length; i++) {
     let legendObject = {};
     legendObject.id = i;

@@ -1,12 +1,9 @@
 import "./App.css";
 import Map from "./Components/Map.component/Map";
 import { Legend } from "./Components/Legend.component/Legend";
-import Upload from "./Components/Upload.component/Upload";
-import { data } from "./Components/data";
 import { Info } from "./Components/Info.component/Info";
 import { lads } from "./Components/Local_Authority_Districts";
-import { cas } from "./Components/Local_Authority_Districts copy";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import {
   getEqualIntervals,
   getNaturalBreaks,
@@ -16,20 +13,27 @@ import {
   getDataFromGeojson,
   getMetricsListFromGeojson,
 } from "./Utils/getDataFromGeojson";
-import { uploadGeojson, getGeojson } from "./Utils/api";
 
 function App() {
-  const [geomData, setGeomData] = useState(lads);
-  // const [uploadData, setUploadData] = useState(getDataFromGeojson(JSON.stringify(lads)));
-  const [metricsList, setMetricsList] = useState(["SHAPE_Area","SHAPE_Length"]);
-  const [selectedMetric, setSelectedMetric] = useState(metricsList[0]);
+  const [metricsList, setMetricsList] = useState([
+    "SHAPE_Area",
+    "SHAPE_Length",
+  ]);
+  const [selectedMetric, setSelectedMetric] = useState("SHAPE_Area");
+  const [valuesToClassify, setValuesToClassify] = useState();
   const [numberOfClasses, setNumberOfClasses] = useState(10);
-  const [jenksClasses, setJenksClasses] = useState([0.1, 2, 3, 4, 5]);
-  const [equalIntervals, setEqualIntervals] = useState([0.1, 2, 3, 4, 5]);
-  const [quantiles, setQuantiles] = useState([0.1, 2, 3, 4, 5]);
+  const [jenksClasses, setJenksClasses] = useState([
+    0.000347, 0.0259, 0.0584, 0.104, 0.163, 0.253, 0.341, 0.46, 0.787, 3.92,
+  ]);
+  const [equalIntervals, setEqualIntervals] = useState([
+    0.392, 0.784, 1.18, 1.57, 1.96, 2.35, 2.74, 3.14, 3.53, 4.92,
+  ]);
+  const [quantiles, setQuantiles] = useState([
+    0.000347, 0.00529, 0.00978, 0.0142, 0.0217, 0.0356, 0.0471, 0.0729, 0.103,
+    0.173,
+  ]);
   const [selectedFile, setSelectedFile] = useState(JSON.stringify(lads));
   const [isFilePicked, setIsFilePicked] = useState(false);
-  const fileObject = useRef({});
 
   const colourArray = [
     "#fff7fb",
@@ -65,23 +69,32 @@ function App() {
     };
   };
 
-const handleDropdownChange = (e) => {
-console.log(e.target.value)
-let valuesToClassify = getDataFromGeojson(e.target.value,selectedFile)
-console.log(valuesToClassify)
-setSelectedMetric(e.target.value)
-setJenksClasses(getNaturalBreaks(valuesToClassify, numberOfClasses));
+  const handleMetricDropdownChange = (e) => {
+    // console.log(e.target.value);
+    // let valuesToClassify = getDataFromGeojson(e.target.value, selectedFile);
+    // console.log(valuesToClassify);
+    let selection = e.target.value
+    setSelectedMetric(selection);
+    setValuesToClassify(getDataFromGeojson(selection, selectedFile))
+    setJenksClasses(getNaturalBreaks(valuesToClassify, numberOfClasses));
     setEqualIntervals(getEqualIntervals(valuesToClassify, numberOfClasses));
     setQuantiles(getQuantiles(valuesToClassify, numberOfClasses));
-}
+  };
 
-console.log(metricsList)
+  const handleClassesDropdownChange = (e) => {
+    let classesSelection = e.target.value
+    setNumberOfClasses(classesSelection);
+    setJenksClasses(getNaturalBreaks(valuesToClassify, numberOfClasses));
+    setEqualIntervals(getEqualIntervals(valuesToClassify, numberOfClasses));
+    setQuantiles(getQuantiles(valuesToClassify, numberOfClasses));
+  };
+console.log(jenksClasses, numberOfClasses)
   return (
     <div className="App">
       <div className="Toolbar">
         <div className="Title">Symbology Helper</div>
         <Info />
-        <div className="Upload">
+        <div className="UploadAndDropdowns">
           <input type="file" name="file" onChange={handleChange} />
           {isFilePicked ? (
             <div>
@@ -90,15 +103,36 @@ console.log(metricsList)
           ) : (
             <p>Select a file to show details</p>
           )}
-          <select name="metricSelector" id="metricSelector" selected="OBJECTID" onChange={handleDropdownChange}>
+          Select the metric to colour by:
+          <select
+            name="metricSelector"
+            id="metricSelector"
+            defaultValue="SHAPE_Area"
+            onChange={handleMetricDropdownChange}
+          >
             {metricsList.map((item) => {
-              return <option value={item}>{item}</option>
+              return <option value={item}>{item}</option>;
             })}
           </select>
-
-          {/* <div>
-            <button onClick={handleSubmission}>Submit</button>
-          </div> */}
+          Select the number of colour classes:
+          <select
+            name="numberOfClassesSelector"
+            id="numberOfClassesSelector"
+            defaultValue="10"
+            onChange={handleClassesDropdownChange}
+          >
+            <option value="5">5</option>
+            <option value="6">6</option>
+            <option value="7">7</option>
+            <option value="8">8</option>
+            <option value="9">9</option>
+            <option value="10">10</option>
+            <option value="11">11</option>
+            <option value="12">12</option>
+            <option value="13">13</option>
+            <option value="14">14</option>
+            <option value="15">15</option>
+          </select>
         </div>
       </div>
       <div className="MapContainer">

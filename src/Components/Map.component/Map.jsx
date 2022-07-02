@@ -10,6 +10,16 @@ mapboxgl.accessToken =
 const Map = ({ classes, geomData, mapTitle, colourArray, selectedMetric }) => {
   const mapContainer = useRef();
 
+let stepColourArray = [
+  "step",
+  ["get", selectedMetric],
+  colourArray[0],
+]
+for(let i = 1; i < classes.length; i++) {
+  stepColourArray.push(Number(classes[i]))
+  stepColourArray.push(colourArray[i])
+}
+
   useEffect(() => {
     const map = new mapboxgl.Map({
       container: mapContainer.current,
@@ -27,29 +37,7 @@ const Map = ({ classes, geomData, mapTitle, colourArray, selectedMetric }) => {
         type: "fill",
         source: "geom",
         paint: {
-          "fill-color": [
-            "step",
-            ["get", selectedMetric],
-            colourArray[0],
-            Number(classes[1]),
-            colourArray[1],
-            Number(classes[2]),
-            colourArray[2],
-            Number(classes[3]),
-            colourArray[3],
-            Number(classes[4]),
-            colourArray[4],
-            Number(classes[5]),
-            colourArray[5],
-            Number(classes[6]),
-            colourArray[6],
-            Number(classes[7]),
-            colourArray[7],
-            Number(classes[8]),
-            colourArray[8],
-            Number(classes[9]),
-            colourArray[9],
-          ],
+          "fill-color": stepColourArray
         },
       });
       map.addLayer({

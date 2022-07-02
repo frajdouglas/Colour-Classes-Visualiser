@@ -200,7 +200,7 @@ function App() {
             />
           </div>
         </div>
-        <div className="Map2">
+        {/* <div className="Map2">
           <Map
             classes={classDataObject.equalIntervalsData}
             geomData={JSON.parse(geometry.current)}
@@ -229,9 +229,9 @@ function App() {
               mapTitle="Quantiles"
               classes={classDataObject.quantilesData}
               colourArray={colourArray}
-            />
+            /> 
           </div>
-        </div>
+        </div>*/}
       </div>
     </div>
   );

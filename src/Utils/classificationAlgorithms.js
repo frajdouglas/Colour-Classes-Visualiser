@@ -6,15 +6,10 @@ export const getEqualIntervals = (dataset, n_classes) => {
   const classRange = (highestValue - lowestValue) / n_classes;
   let resultArray = [];
   resultArray[0] = lowestValue + classRange;
-  resultArray[1] = resultArray[0] + classRange;
-  resultArray[2] = resultArray[1] + classRange;
-  resultArray[3] = resultArray[2] + classRange;
-  resultArray[4] = resultArray[3] + classRange;
-  resultArray[5] = resultArray[4] + classRange;
-  resultArray[6] = resultArray[5] + classRange;
-  resultArray[7] = resultArray[6] + classRange;
-  resultArray[8] = resultArray[7] + classRange;
-  resultArray[9] = resultArray[8] + classRange + 1;
+  for (let i = 0; i < (n_classes - 1); i++) {
+    resultArray.push(resultArray[i] + classRange);
+  }
+
 
   return resultArray;
 };

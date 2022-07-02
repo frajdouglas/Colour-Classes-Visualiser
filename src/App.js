@@ -3,7 +3,7 @@ import Map from "./Components/Map.component/Map";
 import { Legend } from "./Components/Legend.component/Legend";
 import { Info } from "./Components/Info.component/Info";
 import { lads } from "./Components/Local_Authority_Districts";
-import { useState, useEffect } from "react";
+import { useState, useRef } from "react";
 import {
   getEqualIntervals,
   getNaturalBreaks,
@@ -15,25 +15,24 @@ import {
 } from "./Utils/getDataFromGeojson";
 
 function App() {
-  const [metricsList, setMetricsList] = useState([
-    "SHAPE_Area",
-    "SHAPE_Length",
-  ]);
-  const [selectedMetric, setSelectedMetric] = useState("SHAPE_Area");
-  const [valuesToClassify, setValuesToClassify] = useState();
-  const [numberOfClasses, setNumberOfClasses] = useState(10);
-  const [jenksClasses, setJenksClasses] = useState([
-    0.000347, 0.0259, 0.0584, 0.104, 0.163, 0.253, 0.341, 0.46, 0.787, 3.92,
-  ]);
-  const [equalIntervals, setEqualIntervals] = useState([
-    0.392, 0.784, 1.18, 1.57, 1.96, 2.35, 2.74, 3.14, 3.53, 4.92,
-  ]);
-  const [quantiles, setQuantiles] = useState([
-    0.000347, 0.00529, 0.00978, 0.0142, 0.0217, 0.0356, 0.0471, 0.0729, 0.103,
-    0.173,
-  ]);
-  const [selectedFile, setSelectedFile] = useState(JSON.stringify(lads));
-  const [isFilePicked, setIsFilePicked] = useState(false);
+  const geometry = useRef(JSON.stringify(lads));
+  const classParameters = useRef({
+    selectedMetric: "SHAPE_Area",
+    selectedNumberOfClasses: 10,
+  });
+  const metricsList = useRef(["SHAPE_Area", "SHAPE_Length"]);
+  const [classDataObject, setClassDataObject] = useState({
+    jenksData: [
+      0.000347, 0.0259, 0.0584, 0.104, 0.163, 0.253, 0.341, 0.46, 0.787, 3.92,
+    ],
+    equalIntervalsData: [
+      0.392, 0.784, 1.18, 1.57, 1.96, 2.35, 2.74, 3.14, 3.53, 4.92,
+    ],
+    quantilesData: [
+      0.000347, 0.00529, 0.00978, 0.0142, 0.0217, 0.0356, 0.0471, 0.0729, 0.103,
+      0.173,
+    ],
+  });
 
   const colourArray = [
     "#fff7fb",
@@ -48,10 +47,6 @@ function App() {
     "#023020",
   ];
 
-  useEffect(() => {
-    setMetricsList(getMetricsListFromGeojson(selectedFile));
-  }, [selectedFile]);
-
   const handleChange = (e) => {
     const fileReader = new FileReader();
     const fileInput = e.target;
@@ -63,32 +58,88 @@ function App() {
         window.alert(`Files type must be ${allowedFileTypes.join(", ")}`);
         return false;
       } else {
-        setSelectedFile(e.target.result);
-        setIsFilePicked(true);
+        geometry.current = e.target.result
+        metricsList.current = getMetricsListFromGeojson(geometry.current)
+        let rawMetricData = getDataFromGeojson(
+          classParameters.current.selectedMetric,
+          geometry.current
+        );
+        let newJenksClasses = getNaturalBreaks(
+          rawMetricData,
+          classParameters.current.selectedNumberOfClasses
+        );
+        let newEqualIntervalsClasses = getEqualIntervals(
+          rawMetricData,
+          classParameters.current.selectedNumberOfClasses
+        );
+        let newQuantilesClasses = getQuantiles(
+          rawMetricData,
+          classParameters.current.selectedNumberOfClasses
+        );
+        let newDataObject = {
+          jenksData: newJenksClasses,
+          equalIntervalsData: newEqualIntervalsClasses,
+          quantilesData: newQuantilesClasses,
+        };
+        setClassDataObject(newDataObject);
       }
     };
   };
 
   const handleMetricDropdownChange = (e) => {
-    // console.log(e.target.value);
-    // let valuesToClassify = getDataFromGeojson(e.target.value, selectedFile);
-    // console.log(valuesToClassify);
-    let selection = e.target.value
-    setSelectedMetric(selection);
-    setValuesToClassify(getDataFromGeojson(selection, selectedFile))
-    setJenksClasses(getNaturalBreaks(valuesToClassify, numberOfClasses));
-    setEqualIntervals(getEqualIntervals(valuesToClassify, numberOfClasses));
-    setQuantiles(getQuantiles(valuesToClassify, numberOfClasses));
+    let metricSelection = e.target.value;
+    classParameters.current.selectedMetric = metricSelection
+    let rawMetricData = getDataFromGeojson(
+      classParameters.current.selectedMetric,
+      geometry.current
+    );
+    let newJenksClasses = getNaturalBreaks(
+      rawMetricData,
+      classParameters.current.selectedNumberOfClasses
+    );
+    let newEqualIntervalsClasses = getEqualIntervals(
+      rawMetricData,
+      classParameters.current.selectedNumberOfClasses
+    );
+    let newQuantilesClasses = getQuantiles(
+      rawMetricData,
+      classParameters.current.selectedNumberOfClasses
+    );
+    let newDataObject = {
+      jenksData: newJenksClasses,
+      equalIntervalsData: newEqualIntervalsClasses,
+      quantilesData: newQuantilesClasses,
+    };
+    setClassDataObject(newDataObject);
   };
 
   const handleClassesDropdownChange = (e) => {
-    let classesSelection = e.target.value
-    setNumberOfClasses(classesSelection);
-    setJenksClasses(getNaturalBreaks(valuesToClassify, numberOfClasses));
-    setEqualIntervals(getEqualIntervals(valuesToClassify, numberOfClasses));
-    setQuantiles(getQuantiles(valuesToClassify, numberOfClasses));
+    let classesSelection = e.target.value;
+    classParameters.current.selectedNumberOfClasses = classesSelection;
+    let rawMetricData = getDataFromGeojson(
+      classParameters.current.selectedMetric,
+      geometry.current
+    );
+    let newJenksClasses = getNaturalBreaks(
+      rawMetricData,
+      classParameters.current.selectedNumberOfClasses
+    );
+    let newEqualIntervalsClasses = getEqualIntervals(
+      rawMetricData,
+      classParameters.current.selectedNumberOfClasses
+    );
+    let newQuantilesClasses = getQuantiles(
+      rawMetricData,
+      classParameters.current.selectedNumberOfClasses
+    );
+    let newDataObject = {
+      jenksData: newJenksClasses,
+      equalIntervalsData: newEqualIntervalsClasses,
+      quantilesData: newQuantilesClasses,
+    };
+    setClassDataObject(newDataObject);
   };
-console.log(jenksClasses, numberOfClasses)
+
   return (
     <div className="App">
       <div className="Toolbar">
@@ -96,13 +147,6 @@ console.log(jenksClasses, numberOfClasses)
         <Info />
         <div className="UploadAndDropdowns">
           <input type="file" name="file" onChange={handleChange} />
-          {isFilePicked ? (
-            <div>
-              <p>Filetype: {JSON.parse(selectedFile).type}</p>
-            </div>
-          ) : (
-            <p>Select a file to show details</p>
-          )}
           Select the metric to colour by:
           <select
             name="metricSelector"
@@ -110,8 +154,12 @@ console.log(jenksClasses, numberOfClasses)
             defaultValue="SHAPE_Area"
             onChange={handleMetricDropdownChange}
           >
-            {metricsList.map((item) => {
-              return <option value={item}>{item}</option>;
+            {metricsList.current.map((item) => {
+              return (
+                <option value={item} key={`${item}MetricsList`}>
+                  {item}
+                </option>
+              );
             })}
           </select>
           Select the number of colour classes:
@@ -138,48 +186,48 @@ console.log(jenksClasses, numberOfClasses)
       <div className="MapContainer">
         <div className="Map1">
           <Map
-            classes={jenksClasses}
-            geomData={JSON.parse(selectedFile)}
+            classes={classDataObject.jenksData}
+            geomData={JSON.parse(geometry.current)}
             mapTitle="Natural Breaks"
             colourArray={colourArray}
-            selectedMetric={selectedMetric}
+            selectedMetric={classParameters.current.selectedMetric}
           />
           <div className="Legend1">
             <Legend
               mapTitle="Natural Breaks"
-              classes={jenksClasses}
+              classes={classDataObject.jenksData}
               colourArray={colourArray}
             />
           </div>
         </div>
         <div className="Map2">
           <Map
-            classes={equalIntervals}
-            geomData={JSON.parse(selectedFile)}
+            classes={classDataObject.equalIntervalsData}
+            geomData={JSON.parse(geometry.current)}
             mapTitle="Equal Intervals"
             colourArray={colourArray}
-            selectedMetric={selectedMetric}
+            selectedMetric={classParameters.current.selectedMetric}
           />
           <div className="Legend2">
             <Legend
               mapTitle="Equal Intervals"
-              classes={equalIntervals}
+              classes={classDataObject.equalIntervalsData}
               colourArray={colourArray}
             />
           </div>
         </div>
         <div className="Map3">
           <Map
-            classes={quantiles}
-            geomData={JSON.parse(selectedFile)}
+            classes={classDataObject.quantilesData}
+            geomData={JSON.parse(geometry.current)}
             mapTitle="Quantiles"
             colourArray={colourArray}
-            selectedMetric={selectedMetric}
+            selectedMetric={classParameters.current.selectedMetric}
           />
           <div className="Legend3">
             <Legend
               mapTitle="Quantiles"
-              classes={quantiles}
+              classes={classDataObject.quantilesData}
               colourArray={colourArray}
             />
           </div>

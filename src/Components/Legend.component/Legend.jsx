@@ -13,8 +13,9 @@ export const Legend = ({ mapTitle, classes, colourArray }) => {
     <div className="legend">
       <div className="AlgoName">{mapTitle}</div>
       {legendArray.map((item) => {
+        // console.log(item)
         return (
-          <div className="legendRow">
+          <div className="legendRow" key={`${item.id}LegendRow`}>
             <div className="legendValue">{item.value.toPrecision(3)}</div>
             <div
               style={{

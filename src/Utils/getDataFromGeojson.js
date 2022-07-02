@@ -5,6 +5,7 @@ export const getDataFromGeojson = (metricName, geometry) => {
   features.forEach((item) => {
     valueArray.push(item.properties[metricName]);
   });
+  console.log(valueArray)
   return valueArray;
 };
 

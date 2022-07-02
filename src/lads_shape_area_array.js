@@ -1,0 +1,1 @@
+const lads_shape_area = []
